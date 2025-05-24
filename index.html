@@ -1,30 +1,8 @@
+import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Doktor Filtreleme</title>
-  <style>
-    body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
-    h1 { font-size: 24px; margin-bottom: 20px; }
-    .filters { margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 10px; }
-    select { padding: 8px; border-radius: 8px; border: 1px solid #ccc; min-width: 150px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
-    .card { background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-    .card .name { font-weight: bold; font-size: 18px; }
-    .card .hospital { color: #666; font-size: 14px; }
-  </style>
-</head>
-<body>
-  <h1>Doktor Filtreleme</h1>
-  <div class="filters">
-    <select id="cityFilter"><option value="">Şehir</option></select>
-    <select id="branchFilter"><option value="">Branş</option></select>
-    <select id="typeFilter"><option value="">Tür</option></select>
-  </div>
-  <div id="doctorList" class="grid"></div>
-  <script>
 const doctors = [
   {
     name: "Prof.dr Bülent Kara",
@@ -286,44 +264,56 @@ const doctors = [
     hospital: "Özel klinik"
   }
 ];
-    const cityFilter = document.getElementById("cityFilter");
-    const branchFilter = document.getElementById("branchFilter");
-    const typeFilter = document.getElementById("typeFilter");
-    const doctorList = document.getElementById("doctorList");
 
-    const unique = (key) => [...new Set(doctors.map(d => d[key]))];
+export default function DoctorsPage() {
+  const [city, setCity] = useState("");
+  const [branch, setBranch] = useState("");
+  const [type, setType] = useState("");
 
-    function populateFilters() {
-      unique("city").forEach(c => cityFilter.innerHTML += `<option value="${c}">${c}</option>`);
-      unique("branch").forEach(b => branchFilter.innerHTML += `<option value="${b}">${b}</option>`);
-      unique("type").forEach(t => typeFilter.innerHTML += `<option value="${t}">${t}</option>`);
-    }
+  const filtered = doctors.filter(
+    (d) =>
+      (!city || d.city === city) &&
+      (!branch || d.branch === branch) &&
+      (!type || d.type === type)
+  );
 
-    function renderDoctors() {
-      const city = cityFilter.value;
-      const branch = branchFilter.value;
-      const type = typeFilter.value;
+  const unique = (key) => [...new Set(doctors.map((d) => d[key]))];
 
-      const filtered = doctors.filter(d =>
-        (!city || d.city === city) &&
-        (!branch || d.branch === branch) &&
-        (!type || d.type === type)
-      );
-
-      doctorList.innerHTML = filtered.map(d => `
-        <div class="card">
-          <div class="name">${d.name}</div>
-          <div>${d.branch}</div>
-          <div>${d.city} - ${d.type}</div>
-          <div class="hospital">${d.hospital}</div>
-        </div>
-      `).join("");
-    }
-
-    [cityFilter, branchFilter, typeFilter].forEach(el => el.addEventListener("change", renderDoctors));
-
-    populateFilters();
-    renderDoctors();
-  </script>
-</body>
-</html>
+  return (
+    <div className="p-6 space-y-4">
+      <h1 className="text-2xl font-bold">Doktor Filtreleme</h1>
+      <div className="flex gap-4 flex-wrap">
+        <Select onValueChange={setCity}>
+          <SelectTrigger className="w-[200px]"><SelectValue placeholder="Şehir" /></SelectTrigger>
+          <SelectContent>
+            {unique("city").map((c) => (<SelectItem key={c} value={c}>{c}</SelectItem>))}
+          </SelectContent>
+        </Select>
+        <Select onValueChange={setBranch}>
+          <SelectTrigger className="w-[250px]"><SelectValue placeholder="Branş" /></SelectTrigger>
+          <SelectContent>
+            {unique("branch").map((b) => (<SelectItem key={b} value={b}>{b}</SelectItem>))}
+          </SelectContent>
+        </Select>
+        <Select onValueChange={setType}>
+          <SelectTrigger className="w-[200px]"><SelectValue placeholder="Tür" /></SelectTrigger>
+          <SelectContent>
+            {unique("type").map((t) => (<SelectItem key={t} value={t}>{t}</SelectItem>))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {filtered.map((d, i) => (
+          <Card key={i}>
+            <CardContent className="p-4 space-y-1">
+              <div className="font-semibold text-lg">{d.name}</div>
+              <div>{d.branch}</div>
+              <div>{d.city} - {d.type}</div>
+              <div className="text-sm text-muted-foreground">{d.hospital}</div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
