@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Doktor Filtreleme</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    select, input { margin: 5px; padding: 5px; }
+    .doctor-card { border: 1px solid #ccc; padding: 10px; margin: 10px 0; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h1>Doktor Filtreleme</h1>
+  <div>
+    <select id="citySelect"><option value="">Şehir</option></select>
+    <select id="branchSelect"><option value="">Branş</option></select>
+    <select id="typeSelect"><option value="">Tür</option></select>
+  </div>
+  <div id="results"></div>
+
+  <script>
+    const doctors = [
+  {
+    "name": "Prof.dr Bülent Kara",
+    "branch": "Çocuk Nörolojisi",
+    "city": "Kocaeli",
+    "type": "Devlet",
+    "hospital": "Kocaeli üniversitesi Araştırma Ve Uygulama hastanesi"
+  },
+  {
+    "name": "Sanem Keskin Yılmaz",
+    "branch": "Çocuk Nörolojisi",
+    "city": "İzmir",
+    "type": "Devlet",
+    "hospital": "Ege Üniversitesi Hastanesi"
+  },
+  {
+    "name": "Dr fitnas ulug",
+    "branch": "Çocuk Nörolojisi",
+    "city": "İstanbul",
+    "type": "Devlet",
+    "hospital": "Prof dr cemil tşçıoğlu şehir hastanesi"
+  }
+];
+
+    const citySelect = document.getElementById("citySelect");
+    const branchSelect = document.getElementById("branchSelect");
+    const typeSelect = document.getElementById("typeSelect");
+    const results = document.getElementById("results");
+
+    function populateFilters() {
+      const cities = [...new Set(doctors.map(d => d.city))];
+      const branches = [...new Set(doctors.map(d => d.branch))];
+      const types = [...new Set(doctors.map(d => d.type))];
+
+      cities.forEach(c => citySelect.innerHTML += `<option value="\${c}">\${c}</option>`);
+      branches.forEach(b => branchSelect.innerHTML += `<option value="\${b}">\${b}</option>`);
+      types.forEach(t => typeSelect.innerHTML += `<option value="\${t}">\${t}</option>`);
+    }
+
+    function filterDoctors() {
+      const city = citySelect.value;
+      const branch = branchSelect.value;
+      const type = typeSelect.value;
+
+      const filtered = doctors.filter(d =>
+        (!city || d.city === city) &&
+        (!branch || d.branch === branch) &&
+        (!type || d.type === type)
+      );
+
+      results.innerHTML = filtered.map(d => `
+        <div class="doctor-card">
+          <strong>\${d.name}</strong><br />
+          \${d.branch} - \${d.city} - \${d.type}<br />
+          <em>\${d.hospital}</em>
+        </div>
+      `).join("");
+    }
+
+    citySelect.addEventListener("change", filterDoctors);
+    branchSelect.addEventListener("change", filterDoctors);
+    typeSelect.addEventListener("change", filterDoctors);
+
+    populateFilters();
+    filterDoctors();
+  </script>
+</body>
+</html>
