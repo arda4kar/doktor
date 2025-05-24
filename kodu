@@ -1,0 +1,319 @@
+import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+
+const doctors = [
+  {
+    name: "Prof.dr Bülent Kara",
+    branch: "Çocuk Nörolojisi",
+    city: "Kocaeli",
+    type: "Devlet",
+    hospital: "Kocaeli üniversitesi Araştırma Ve Uygulama hastanesi"
+  },
+  {
+    name: "Sanem Keskin Yılmaz",
+    branch: "Çocuk Nörolojisi",
+    city: "İzmir",
+    type: "Devlet",
+    hospital: "Ege Üniversitesi Hastanesi"
+  },
+  {
+    name: "Dr fitnas ulug",
+    branch: "Çocuk Nörolojisi",
+    city: "İstanbul",
+    type: "Devlet",
+    hospital: "Prof dr cemil tşçıoğlu şehir hastanesi"
+  },
+  {
+    name: "Semra saygın",
+    branch: "Çocuk Nörolojisi",
+    city: "Adana",
+    type: "Özel",
+    hospital: "Çukurova başkent hastanesi"
+  },
+  {
+    name: "Serkan kırma",
+    branch: "Çocuk Nörolojisi",
+    city: "Elazığ",
+    type: "Devlet",
+    hospital: "Fethi Sekin Şehir Hastanesi"
+  },
+  {
+    name: "Ergun Nacarküçük",
+    branch: "Çocuk Nörolojisi",
+    city: "Bursa",
+    type: "Özel",
+    hospital: "Özel muayenesi"
+  },
+  {
+    name: "Hasan Çelik",
+    branch: "Çocuk Nörolojisi",
+    city: "Diyarbakır",
+    type: "Devlet",
+    hospital: "Diyarbakır çocuk hastanesi"
+  },
+  {
+    name: "Burak tatlı",
+    branch: "Çocuk Nörolojisi",
+    city: "İstanbul",
+    type: "Özel",
+    hospital: "Zatay klinik özel klinik"
+  },
+  {
+    name: "Safiye Güneş Sağer",
+    branch: "Çocuk Nörolojisi",
+    city: "İstanbul",
+    type: "Devlet",
+    hospital: "Kartal Lütfi Kırdar şehir Hastanesi"
+  },
+  {
+    name: "Hasan tekgül",
+    branch: "Çocuk Nörolojisi",
+    city: "İzmir",
+    type: "Özel",
+    hospital: "Ege üniversitesi hocası ancak sadece özel muayenede bakıyor"
+  },
+  {
+    name: "Prof. Dr. Ayşin Dervent",
+    branch: "Çocuk Nörolojisi",
+    city: "İstanbul",
+    type: "Özel",
+    hospital: "Caferağa, Gen. Asım Gündüz Cd. No.81/2, 34710 Kadıköy"
+  },
+  {
+    name: "Özgür duman",
+    branch: "Çocuk Nörolojisi",
+    city: "Antalya",
+    type: "Özel",
+    hospital: "Özel"
+  },
+  {
+    name: "Hülya kayserili",
+    branch: "Tıbbi Genetik",
+    city: "İstanbul",
+    type: "Özel",
+    hospital: "Koç uni"
+  },
+  {
+    name: "Adnan yüksel",
+    branch: "Çocuk Nörolojisi",
+    city: "İstanbul",
+    type: "Özel",
+    hospital: "Biruni hastanesi"
+  },
+  {
+    name: "Candan gürses yrtişkin norolog",
+    branch: "Çocuk Nörolojisi",
+    city: "İstanbul",
+    type: "Özel",
+    hospital: "Koç uni"
+  },
+  {
+    name: "CAHİDE BULUT ASLAN",
+    branch: "Çocuk Nörolojisi",
+    city: "Batman",
+    type: "Özel",
+    hospital: "BATMAN MEDİCAL POİNT"
+  },
+  {
+    name: "Cengiz havalı",
+    branch: "Çocuk Nörolojisi",
+    city: "İstanbul",
+    type: "Devlet",
+    hospital: "Çam sakura"
+  },
+  {
+    name: "Alper gezdirici",
+    branch: "Tıbbi Genetik",
+    city: "İstanbul",
+    type: "Devlet",
+    hospital: "Başakşehir çam ve sakura şehir hastanesi"
+  },
+  {
+    name: "Tamer çelik",
+    branch: "Çocuk Nörolojisi",
+    city: "Adana",
+    type: "Devlet",
+    hospital: "Adana şehir hastanesi"
+  },
+  {
+    name: "Haydar Ali tademir",
+    branch: "Çocuk Nörolojisi",
+    city: "Samsun",
+    type: "Özel",
+    hospital: "OMÜ emekli"
+  },
+  {
+    name: "Ayşegül danış",
+    branch: "Çocuk Nörolojisi",
+    city: "Bolu",
+    type: "Devlet",
+    hospital: "Abant İzzet Baysal üniversştesi Eğitim araştırma hastanesi"
+  },
+  {
+    name: "Pınar Aydın Öztürk",
+    branch: "Çocuk beyin cerrahı",
+    city: "Diyarbakır",
+    type: "Devlet",
+    hospital: "Dicle üniversitesi hastanesi"
+  },
+  {
+    name: "İhsan çaça",
+    branch: "Çocuk göz doktoru",
+    city: "Diyarbakır",
+    type: "Özel",
+    hospital: "Diyarlife hastanesi"
+  },
+  {
+    name: "Ali Cansu",
+    branch: "Çocuk Nörolojisi",
+    city: "Trabzon",
+    type: "Özel",
+    hospital: "K.T.Ü"
+  },
+  {
+    name: "Seyit Ali Güçlü",
+    branch: "Ortopedi ve Travmatoloji",
+    city: "Kocaeli",
+    type: "Devlet",
+    hospital: "Kocaeli şehir hastanesi"
+  },
+  {
+    name: "Prof. Dr. Mehmet Borazan",
+    branch: "Göz hastalıkları",
+    city: "Kocaeli",
+    type: "Özel",
+    hospital: "Özel çağın göz hastalıkları hastanesi"
+  },
+  {
+    name: "Recep Polat",
+    branch: "Çocuk endokrinoloji",
+    city: "Sakarya",
+    type: "Devlet",
+    hospital: "Seah"
+  },
+  {
+    name: "Prof. Dr. Serkan Demir",
+    branch: "Nöroloji",
+    city: "İstanbul",
+    type: "Devlet",
+    hospital: "İlhan Varank"
+  },
+  {
+    name: "Abidin Erdal",
+    branch: "Epilepsi kliniği, nöroloji",
+    city: "Ankara",
+    type: "Devlet",
+    hospital: "Bilkent şehir hastanesi"
+  },
+  {
+    name: "Abdülmelik Doğan",
+    branch: "Pediatri (Çocuk Sağlığı ve Hastalıkları)",
+    city: "Diyarbakır",
+    type: "Özel",
+    hospital: "Özel Sultan hastanesi"
+  },
+  {
+    name: "Pakize Cennetoğlu",
+    branch: "Çocuk Nörolojisi",
+    city: "Erzurum",
+    type: "Devlet",
+    hospital: "Erzurum Devlet Hastanesi"
+  },
+  {
+    name: "Sezai Arslan",
+    branch: "Çocuk Metobolizması",
+    city: "Erzurum",
+    type: "Devlet",
+    hospital: "Erzurum Şehir Hastanesi"
+  },
+  {
+    name: "Özge Beyza Gündoğdu",
+    branch: "Tıbbi Genetik",
+    city: "Erzurum",
+    type: "Devlet",
+    hospital: "Erzurum Şehir Hastanesi"
+  },
+  {
+    name: "Hasan Türkmen",
+    branch: "Çocuk Kardiyolojisi",
+    city: "Erzurum",
+    type: "Devlet",
+    hospital: "Erzurum Şehir Hastanesi"
+  },
+  {
+    name: "Dr Fatma karataş",
+    branch: "Noroleji",
+    city: "Amasya",
+    type: "Devlet",
+    hospital: "Amasya üniversitesi sabuncuoğlu Şerafettin eğitim ve araştırma hastanesi"
+  },
+  {
+    name: "Betül Kılıç",
+    branch: "Çocuk Nörolojisi",
+    city: "İstanbul",
+    type: "Özel",
+    hospital: "Medipol mega hastanesi"
+  },
+  {
+    name: "Gürkan gürbüz",
+    branch: "Çocuk Nörolojisi",
+    city: "Tekirdağ",
+    type: "Özel",
+    hospital: "Özel klinik"
+  }
+];
+
+export default function DoctorsPage() {
+  const [city, setCity] = useState("");
+  const [branch, setBranch] = useState("");
+  const [type, setType] = useState("");
+
+  const filtered = doctors.filter(
+    (d) =>
+      (!city || d.city === city) &&
+      (!branch || d.branch === branch) &&
+      (!type || d.type === type)
+  );
+
+  const unique = (key) => [...new Set(doctors.map((d) => d[key]))];
+
+  return (
+    <div className="p-6 space-y-4">
+      <h1 className="text-2xl font-bold">Doktor Filtreleme</h1>
+      <div className="flex gap-4 flex-wrap">
+        <Select onValueChange={setCity}>
+          <SelectTrigger className="w-[200px]"><SelectValue placeholder="Şehir" /></SelectTrigger>
+          <SelectContent>
+            {unique("city").map((c) => (<SelectItem key={c} value={c}>{c}</SelectItem>))}
+          </SelectContent>
+        </Select>
+        <Select onValueChange={setBranch}>
+          <SelectTrigger className="w-[250px]"><SelectValue placeholder="Branş" /></SelectTrigger>
+          <SelectContent>
+            {unique("branch").map((b) => (<SelectItem key={b} value={b}>{b}</SelectItem>))}
+          </SelectContent>
+        </Select>
+        <Select onValueChange={setType}>
+          <SelectTrigger className="w-[200px]"><SelectValue placeholder="Tür" /></SelectTrigger>
+          <SelectContent>
+            {unique("type").map((t) => (<SelectItem key={t} value={t}>{t}</SelectItem>))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {filtered.map((d, i) => (
+          <Card key={i}>
+            <CardContent className="p-4 space-y-1">
+              <div className="font-semibold text-lg">{d.name}</div>
+              <div>{d.branch}</div>
+              <div>{d.city} - {d.type}</div>
+              <div className="text-sm text-muted-foreground">{d.hospital}</div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
